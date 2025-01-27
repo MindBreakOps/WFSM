@@ -1,5 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Untitled</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,8 +28,6 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 80%;
-            max-width: 600px;
         }
         .page {
             display: none;
@@ -32,7 +38,7 @@
         button {
             padding: 12px 24px;
             font-size: 16px;
-            margin-top: 10px;
+            margin-top: 20px;
             border: none;
             border-radius: 4px;
             background-color: #ff6f61;
@@ -54,8 +60,7 @@
     <div class="container">
         <div id="greeting-page" class="page active">
             <h1>Welcome to WhatFieldSuitsMe</h1>
-            <p>This tool helps you discover which field suits you best by evaluating your interests in different areas.</p>
-            <p>Select a field of interest to begin the assessment. You'll answer 20 questions, and based on your score, you'll receive feedback on whether the field suits you.</p>
+            <p>Select an interest to start the assessment:</p>
             <button onclick="selectInterest('Technology')">Technology</button>
             <button onclick="selectInterest('Business')">Business</button>
             <button onclick="selectInterest('Science')">Science</button>
@@ -65,6 +70,7 @@
         <div id="question-page" class="page hidden">
             <h2 id="question-text">Question will appear here</h2>
             <div id="options-container"></div>
+            <button onclick="nextQuestion()">Next</button>
         </div>
         <div id="result-page" class="page hidden">
             <h2 id="result-text">Your Result</h2>
@@ -82,28 +88,111 @@
             "Technology": [
                 { text: "What is the primary function of a CPU?", options: ["Process data", "Store data", "Transmit data"], answer: 0 },
                 { text: "What does HTML stand for?", options: ["HyperText Markup Language", "HyperText Machine Language", "HyperTransfer Markup Language"], answer: 0 },
-                // More questions for Technology...
+                { text: "What is RAM?", options: ["Random Access Memory", "Read-only Memory", "Rapid Access Module"], answer: 0 },
+                { text: "Which company created the iPhone?", options: ["Apple", "Samsung", "Google"], answer: 0 },
+                { text: "Who is known as the father of computers?", options: ["Charles Babbage", "Alan Turing", "Bill Gates"], answer: 0 },
+                { text: "What does CSS stand for?", options: ["Cascading Style Sheets", "Creative Style Sheets", "Computer Style Sheets"], answer: 0 },
+                { text: "What is the latest version of HTML?", options: ["HTML5", "HTML4", "HTML6"], answer: 0 },
+                { text: "What is an IP address?", options: ["Internet Protocol", "Internal Process", "Internet Password"], answer: 0 },
+                { text: "What does GUI stand for?", options: ["Graphical User Interface", "General User Interface", "Global User Interface"], answer: 0 },
+                { text: "What is a byte?", options: ["8 bits", "16 bits", "32 bits"], answer: 0 },
+                { text: "Which is a programming language?", options: ["Python", "Snake", "Lizard"], answer: 0 },
+                { text: "What does USB stand for?", options: ["Universal Serial Bus", "Uniform System Bus", "Universal System Board"], answer: 0 },
+                { text: "What is the use of a router?", options: ["Direct network traffic", "Store files", "Run applications"], answer: 0 },
+                { text: "What is the main function of a firewall?", options: ["Block unauthorized access", "Store data", "Speed up a computer"], answer: 0 },
+                { text: "What is an example of an operating system?", options: ["Windows", "HTML", "CSS"], answer: 0 },
+                { text: "What is the purpose of an antivirus?", options: ["Protect against malware", "Speed up the computer", "Clean the screen"], answer: 0 },
+                { text: "What is cloud computing?", options: ["Internet-based computing", "Local storage", "Desktop computing"], answer: 0 },
+                { text: "What is a server?", options: ["A computer that provides data to other computers", "A client", "A desktop computer"], answer: 0 },
+                { text: "Which is a search engine?", options: ["Google", "Facebook", "WhatsApp"], answer: 0 },
                 { text: "What is a URL?", options: ["Uniform Resource Locator", "Universal Resource Locator", "Uniform Resource Link"], answer: 0 }
             ],
             "Business": [
-                { text: "What is marketing?", options: ["Selling products", "Promoting products", "Both"], answer: 2 },
-                { text: "What is an entrepreneur?", options: ["A business owner", "A manager", "A worker"], answer: 0 },
-                // More questions for Business...
+                { text: "What is the primary goal of a business?", options: ["Profit", "Loss", "Break-even"], answer: 0 },
+                { text: "What does CEO stand for?", options: ["Chief Executive Officer", "Chief Energy Officer", "Chief Engineering Officer"], answer: 0 },
+                { text: "What is a startup?", options: ["A new business", "A large corporation", "A non-profit organization"], answer: 0 },
+                { text: "What is marketing?", options: ["Promoting and selling products", "Manufacturing products", "Storing products"], answer: 0 },
+                { text: "What is a business plan?", options: ["A document outlining business goals", "A financial statement", "A marketing strategy"], answer: 0 },
+                { text: "What is an entrepreneur?", options: ["A person who starts a business", "A person who works for a company", "A person who invests in stocks"], answer: 0 },
+                { text: "What is a merger?", options: ["Combining two companies", "Splitting a company", "Closing a company"], answer: 0 },
+                { text: "What is a stakeholder?", options: ["A person with an interest in a company", "A person who works for a company", "A person who buys products"], answer: 0 },
+                { text: "What is a market?", options: ["A place where goods are sold", "A place where goods are manufactured", "A place where goods are stored"], answer: 0 },
+                { text: "What is a brand?", options: ["A name, term, or design that identifies a product", "A type of product", "A marketing strategy"], answer: 0 },
+                { text: "What is a franchise?", options: ["A business that operates under a parent company's brand", "A new business", "A non-profit organization"], answer: 0 },
+                { text: "What is a business model?", options: ["A plan for making a profit", "A financial statement", "A marketing strategy"], answer: 0 },
+                { text: "What is a target market?", options: ["A specific group of consumers", "A place where goods are sold", "A type of product"], answer: 0 },
+                { text: "What is a competitor?", options: ["A rival business", "A partner business", "A customer"], answer: 0 },
+                { text: "What is a product?", options: ["An item offered for sale", "A marketing strategy", "A financial statement"], answer: 0 },
+                { text: "What is a service?", options: ["An activity offered for sale", "A product", "A financial statement"], answer: 0 },
+                { text: "What is a business strategy?", options: ["A plan to achieve business goals", "A financial statement", "A marketing strategy"], answer: 0 },
+                { text: "What is a business cycle?", options: ["The fluctuation of economic activity", "A marketing strategy", "A financial statement"], answer: 0 },
+                { text: "What is a business ethics?", options: ["Moral principles in business", "A financial statement", "A marketing strategy"], answer: 0 }
+
             ],
             "Science": [
-                { text: "What is the chemical symbol for gold?", options: ["Au", "Ag", "Fe"], answer: 0 },
-                { text: "What planet is known as the Red Planet?", options: ["Mars", "Jupiter", "Venus"], answer: 0 },
-                // More questions for Science...
+                { text: "What is the chemical symbol for water?", options: ["H2O", "O2", "CO2"], answer: 0 },
+                { text: "What is the speed of light?", options: ["299,792,458 meters per second", "150,000,000 meters per second", "1,000,000 meters per second"], answer: 0 },
+                { text: "What is the powerhouse of the cell?", options: ["Mitochondria", "Nucleus", "Ribosome"], answer: 0 },
+                { text: "What is the periodic table?", options: ["A chart of elements", "A chart of compounds", "A chart of mixtures"], answer: 0 },
+                { text: "What is the theory of relativity?", options: ["A theory by Albert Einstein", "A theory by Isaac Newton", "A theory by Galileo Galilei"], answer: 0 },
+                { text: "What is the boiling point of water?", options: ["100 degrees Celsius", "0 degrees Celsius", "50 degrees Celsius"], answer: 0 },
+                { text: "What is the largest planet in our solar system?", options: ["Jupiter", "Earth", "Mars"], answer: 0 },
+                { text: "What is the chemical symbol for gold?", options: ["Au", "Ag", "Pb"], answer: 0 },
+                { text: "What is the main gas in the Earth's atmosphere?", options: ["Nitrogen", "Oxygen", "Carbon Dioxide"], answer: 0 },
+                { text: "What is the study of living organisms?", options: ["Biology", "Chemistry", "Physics"], answer: 0 },
+                { text: "What is the center of an atom called?", options: ["Nucleus", "Electron", "Proton"], answer: 0 },
+                { text: "What is the process of converting liquid to gas?", options: ["Evaporation", "Condensation", "Sublimation"], answer: 0 },
+                { text: "What is the smallest unit of life?", options: ["Cell", "Atom", "Molecule"], answer: 0 },
+                { text: "What is the force that pulls objects toward the Earth?", options: ["Gravity", "Magnetism", "Friction"], answer: 0 },
+                { text: "What is the chemical symbol for oxygen?", options: ["O", "O2", "Ox"], answer: 0 },
+                { text: "What is the study of matter and its interactions?", options: ["Chemistry", "Biology", "Physics"], answer: 0 },
+                { text: "What is the process of plants making food using sunlight?", options: ["Photosynthesis", "Respiration", "Digestion"], answer: 0 },
+                { text: "What is the basic unit of a chemical element?", options: ["Atom", "Molecule", "Compound"], answer: 0 },
+                { text: "What is the study of the universe beyond Earth?", options: ["Astronomy", "Geology", "Meteorology"], answer: 0 },
+                { text: "What is the chemical symbol for sodium?", options: ["Na", "S", "N"], answer: 0 }
             ],
             "Health": [
-                { text: "What nutrient is essential for muscle growth?", options: ["Protein", "Carbohydrate", "Fat"], answer: 0 },
-                { text: "What is BMI?", options: ["Body Mass Index", "Body Muscle Index", "Body Measurement Indicator"], answer: 0 },
-                // More questions for Health...
+                { text: "What is the normal body temperature?", options: ["37°C", "35°C", "39°C"], answer: 0 },
+                { text: "What does BMI stand for?", options: ["Body Mass Index", "Body Muscle Index", "Body Measurement Index"], answer: 0 },
+                { text: "What is the main function of the heart?", options: ["Pump blood", "Digest food", "Filter waste"], answer: 0 },
+                { text: "What is a balanced diet?", options: ["A diet with all essential nutrients", "A diet with only proteins", "A diet with only carbohydrates"], answer: 0 },
+                { text: "What is the largest organ in the human body?", options: ["Skin", "Liver", "Heart"], answer: 0 },
+                { text: "What is the function of the lungs?", options: ["Exchange of gases", "Pump blood", "Digest food"], answer: 0 },
+                { text: "What is a common symptom of diabetes?", options: ["High blood sugar", "Low blood sugar", "High blood pressure"], answer: 0 },
+                { text: "What is the function of the kidneys?", options: ["Filter waste from blood", "Pump blood", "Produce hormones"], answer: 0 },
+                { text: "What is the main cause of tooth decay?", options: ["Bacteria", "Viruses", "Fungi"], answer: 0 },
+                { text: "What is the function of red blood cells?", options: ["Carry oxygen", "Fight infections", "Clot blood"], answer: 0 },
+                { text: "What is the main function of the liver?", options: ["Detoxify chemicals", "Pump blood", "Digest food"], answer: 0 },
+                { text: "What is the primary function of the immune system?", options: ["Fight infections", "Digest food", "Pump blood"], answer: 0 },
+                { text: "What is the function of the brain?", options: ["Control body functions", "Pump blood", "Filter waste"], answer: 0 },
+                { text: "What is the main cause of obesity?", options: ["Excessive calorie intake", "Lack of sleep", "High blood pressure"], answer: 0 },
+                { text: "What is the function of white blood cells?", options: ["Fight infections", "Carry oxygen", "Clot blood"], answer: 0 },
+                { text: "What is the main function of the digestive system?", options: ["Break down food", "Pump blood", "Exchange gases"], answer: 0 },
+                { text: "What is the primary function of the skeletal system?", options: ["Support and protect the body", "Pump blood", "Filter waste"], answer: 0 },
+                { text: "What is the main cause of hypertension?", options: ["High blood pressure", "Low blood pressure", "High blood sugar"], answer: 0 },
+                { text: "What is the function of platelets?", options: ["Clot blood", "Carry oxygen", "Fight infections"], answer: 0 },
+                { text: "What is the main function of the endocrine system?", options: ["Produce hormones", "Pump blood", "Filter waste"], answer: 0 }
             ],
             "Art": [
-                { text: "Which art movement did Pablo Picasso co-found?", options: ["Cubism", "Impressionism", "Surrealism"], answer: 0 },
-                { text: "What is the process of applying paint in a thick manner?", options: ["Impasto", "Glazing", "Dry brushing"], answer: 0 },
-                // More questions for Art...
+                { text: "Who painted the Mona Lisa?", options: ["Leonardo da Vinci", "Vincent van Gogh", "Pablo Picasso"], answer: 0 },
+                { text: "What is the primary medium used in watercolor painting?", options: ["Water-based paint", "Oil-based paint", "Acrylic paint"], answer: 0 },
+                { text: "What is the term for a three-dimensional artwork?", options: ["Sculpture", "Painting", "Drawing"], answer: 0 },
+                { text: "What is the art movement associated with Salvador Dalí?", options: ["Surrealism", "Impressionism", "Cubism"], answer: 0 },
+                { text: "What is the technique of applying paint thickly so that it stands out from a surface?", options: ["Impasto", "Glazing", "Scumbling"], answer: 0 },
+                { text: "What is the term for a preliminary drawing or painting?", options: ["Sketch", "Mural", "Fresco"], answer: 0 },
+                { text: "What is the primary material used in sculpture?", options: ["Clay", "Canvas", "Paper"], answer: 0 },
+                { text: "What is the term for a painting done on wet plaster?", options: ["Fresco", "Mosaic", "Collage"], answer: 0 },
+                { text: "What is the art of making objects from clay called?", options: ["Ceramics", "Origami", "Weaving"], answer: 0 },
+                { text: "What is the term for a painting of inanimate objects?", options: ["Still life", "Portrait", "Landscape"], answer: 0 },
+                { text: "What is the primary tool used in drawing?", options: ["Pencil", "Brush", "Chisel"], answer: 0 },
+                { text: "What is the term for a large painting applied directly to a wall?", options: ["Mural", "Miniature", "Sketch"], answer: 0 },
+                { text: "What is the art of folding paper into shapes called?", options: ["Origami", "Calligraphy", "Pottery"], answer: 0 },
+                { text: "What is the term for a painting that depicts natural scenery?", options: ["Landscape", "Portrait", "Abstract"], answer: 0 },
+                { text: "What is the term for an artist's workspace?", options: ["Studio", "Gallery", "Museum"], answer: 0 },
+                { text: "What is the art of beautiful handwriting called?", options: ["Calligraphy", "Typography", "Graffiti"], answer: 0 },
+                { text: "What is the term for a painting that depicts a person?", options: ["Portrait", "Still life", "Landscape"], answer: 0 },
+                { text: "What is the primary tool used in sculpture?", options: ["Chisel", "Brush", "Pencil"], answer: 0 },
+                { text: "What is the term for a painting that uses only one color?", options: ["Monochrome", "Polychrome", "Duotone"], answer: 0 }
             ]
         };
 
@@ -159,3 +248,8 @@
     </script>
 </body>
 </html>
+<!-- partial -->
+<!-- partial -->
+</body>
+</html>
+
