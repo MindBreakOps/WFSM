@@ -6,6 +6,7 @@
 	<title>W.F.S.M | Professional Assessment</title>
 
 	<link rel="manifest" href='data:application/manifest+json,{"name":"What Field Suits Me","short_name":"W.F.S.M","description":"Professional Field Aptitude Assessment Tool","start_url":".","display":"standalone","background_color":"#12c2e9","theme_color":"#f64f59","icons":[{"src":"https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
+	<link rel="manifest" href='data:application/manifest+json,{"name":"What Field Suits Me","short_name":"W.F.S.M","icons":[{"src":"wfsm.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
 
 	<style>
 		:root {
@@ -219,7 +220,7 @@
 	</div>
 
 	<script>
-		const API_URL = "https://script.google.com/macros/s/AKfycbyQJOSSPY6_Vr25OiQkBW9ua8IHyS-HgBYXLgXh69Vr38RNYBWGncLzq1LGuPZmd1ntCA/exec";
+		const API_URL = "https://script.google.com/macros/s/AKfycbykqcyO772Vt8vSykrTR4o8_66p_oHuBEvqXC_Q2itNYMO46EROPVgpRUameC4GolWwIg/exec";
 		
 		const icons = {
 			"Technology": `<svg viewBox="0 0 24 24" fill="none" stroke="#0575E6" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
@@ -299,20 +300,40 @@
 			document.getElementById('cert-cat').textContent = selectedInterest;
 			document.getElementById('cert-percent').textContent = p + "%";
 			document.getElementById('cert-verdict').textContent = verdict;
-
-			// Submit FULL data to Google Sheet
-			fetch(API_URL, {
-				method: 'POST',
-				mode: 'no-cors',
-				body: JSON.stringify({ 
-					name: userData.name, 
-					age: userData.age, 
-					category: selectedInterest, 
-					percentage: p,
-					verdict: verdict
-				})
-			});
-		}
+		
+	function finish() {
+		showPage('result-page');
+		const total = questions[selectedInterest].length * 5;
+		const p = Math.round((score / total) * 100);
+		const verdict = p >= 60 ? "The assessment confirms high compatibility with this field." : "This field may not suit your primary skills at this time.";
+		
+		document.getElementById('cert-name').textContent = userData.name;
+		document.getElementById('cert-cat').textContent = selectedInterest;
+		document.getElementById('cert-percent').textContent = p + "%";
+		document.getElementById('cert-verdict').textContent = verdict;
+	
+		// --- FIXED UPLOAD LOGIC ---
+		// We use FormData/URLSearchParams so Google Apps Script can see the 'parameter' object
+		const formData = new URLSearchParams();
+		formData.append('name', userData.name);
+		formData.append('age', userData.age);
+		formData.append('category', selectedInterest);
+		formData.append('percentage', p);
+		formData.append('verdict', verdict);
+	
+		fetch(API_URL, {
+			method: 'POST',
+			mode: 'no-cors', // Keeps it simple for Google Apps Script
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+			},
+			body: formData.toString()
+		}).then(() => {
+			console.log("Data sent to Google Sheets");
+		}).catch(err => {
+			console.error("Submission error:", err);
+		});
+	}
 
 		function showPage(id) {
 			document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
