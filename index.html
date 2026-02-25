@@ -220,6 +220,7 @@
 	</div>
 
 	<script>
+		// 1. YOUR API URL
 		const API_URL = "https://script.google.com/macros/s/AKfycbykqcyO772Vt8vSykrTR4o8_66p_oHuBEvqXC_Q2itNYMO46EROPVgpRUameC4GolWwIg/exec";
 		
 		const icons = {
@@ -229,21 +230,23 @@
 			"Health": `<svg viewBox="0 0 24 24" fill="none" stroke="#ff4b2b" stroke-width="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
 			"Art": `<svg viewBox="0 0 24 24" fill="none" stroke="#c471ed" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10c0-1.5-1-2.5-2.5-2.5h-1.5c-1.5 0-2.5-1-2.5-2.5v-1.5C15.5 3 14.5 2 13 2Z"/><circle cx="7.5" cy="10.5" r=".5"/><circle cx="10.5" cy="7.5" r=".5"/><circle cx="13.5" cy="11.5" r=".5"/></svg>`
 		};
-
+	
 		let questions = {};
 		let currentQuestionIndex = 0;
 		let score = 0;
 		let selectedInterest = '';
 		let userData = { name: '', age: '' };
-
+	
+		// Load questions from Sheet
 		window.onload = async () => {
 			try {
 				const response = await fetch(API_URL);
 				questions = await response.json();
 				renderCards();
-			} catch (e) { console.error("Sync Error"); }
+			} catch (e) { console.error("Sync Error:", e); }
 		};
-
+	
+		// Button function - now fixed
 		function goToSelection() {
 			const n = document.getElementById('user-name').value;
 			const a = document.getElementById('user-age').value;
@@ -251,9 +254,10 @@
 			userData = { name: n, age: a };
 			showPage('selection-page');
 		}
-
+	
 		function renderCards() {
 			const container = document.getElementById('category-cards');
+			container.innerHTML = ''; 
 			Object.keys(questions).forEach(cat => {
 				const card = document.createElement('div');
 				card.className = 'card';
@@ -262,7 +266,7 @@
 				container.appendChild(card);
 			});
 		}
-
+	
 		function startQuiz(cat) {
 			selectedInterest = cat;
 			currentQuestionIndex = 0;
@@ -270,7 +274,7 @@
 			showPage('quiz-page');
 			showQuestion();
 		}
-
+	
 		function showQuestion() {
 			const q = questions[selectedInterest][currentQuestionIndex];
 			document.getElementById('question-text').textContent = q.text;
@@ -289,55 +293,35 @@
 				box.appendChild(b);
 			});
 		}
-
+	
 		function finish() {
 			showPage('result-page');
 			const total = questions[selectedInterest].length * 5;
 			const p = Math.round((score / total) * 100);
-			const verdict = p >= 60 ? "The assessment confirms high compatibility with this field." : "This field may not suit your primary skills at this time.";
+			const verdict = p >= 60 ? "High Compatibility Found." : "Alternative Paths Suggested.";
 			
 			document.getElementById('cert-name').textContent = userData.name;
 			document.getElementById('cert-cat').textContent = selectedInterest;
 			document.getElementById('cert-percent').textContent = p + "%";
 			document.getElementById('cert-verdict').textContent = verdict;
-		
-	function finish() {
-		showPage('result-page');
-		const total = questions[selectedInterest].length * 5;
-		const p = Math.round((score / total) * 100);
-		const verdict = p >= 60 ? "The assessment confirms high compatibility with this field." : "This field may not suit your primary skills at this time.";
-		
-		document.getElementById('cert-name').textContent = userData.name;
-		document.getElementById('cert-cat').textContent = selectedInterest;
-		document.getElementById('cert-percent').textContent = p + "%";
-		document.getElementById('cert-verdict').textContent = verdict;
 	
-		// --- FIXED UPLOAD LOGIC ---
-		// We use FormData/URLSearchParams so Google Apps Script can see the 'parameter' object
-		const formData = new URLSearchParams();
-		formData.append('name', userData.name);
-		formData.append('age', userData.age);
-		formData.append('category', selectedInterest);
-		formData.append('percentage', p);
-		formData.append('verdict', verdict);
+			// UPLOAD TO GOOGLE RESULTS TAB
+			const finalUrl = API_URL + 
+				"?name=" + encodeURIComponent(userData.name) +
+				"&age=" + encodeURIComponent(userData.age) +
+				"&category=" + encodeURIComponent(selectedInterest) +
+				"&percentage=" + encodeURIComponent(p) +
+				"&verdict=" + encodeURIComponent(verdict);
 	
-		fetch(API_URL, {
-			method: 'POST',
-			mode: 'no-cors', // Keeps it simple for Google Apps Script
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-			},
-			body: formData.toString()
-		}).then(() => {
-			console.log("Data sent to Google Sheets");
-		}).catch(err => {
-			console.error("Submission error:", err);
-		});
-	}
-
+			// This sends the data even if CORS blocks the response
+			const img = new Image();
+			img.src = finalUrl;
+		}
+	
 		function showPage(id) {
 			document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-			document.getElementById(id).classList.add('active');
+			const target = document.getElementById(id);
+			if(target) target.classList.add('active');
 		}
 	</script>
 </body>
