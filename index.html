@@ -1,228 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatFieldSuitsMe (W.F.S.M)</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>W.F.S.M | Professional Assessment</title>
 
-    <link rel="manifest" href='data:application/manifest+json,{"name":"What Field Suits Me","short_name":"W.F.S.M","description":"Professional Field Aptitude Assessment Tool","start_url":".","display":"standalone","background_color":"#74ebd5","theme_color":"#ff6f61","icons":[{"src":"https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
+	<link rel="manifest" href='data:application/manifest+json,{"name":"What Field Suits Me","short_name":"W.F.S.M","description":"Professional Field Aptitude Assessment Tool","start_url":".","display":"standalone","background_color":"#12c2e9","theme_color":"#f64f59","icons":[{"src":"https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
 
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="W.F.S.M">
-    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png">
+	<style>
+		:root {
+			--logo-teal: #12c2e9;
+			--logo-blue: #0575E6;
+			--logo-red: #f64f59;
+			--glass-bg: rgba(255, 255, 255, 0.65);
+			--glass-border: rgba(255, 255, 255, 0.4);
+			--text-dark: #1d1d1f; 
+		}
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #74ebd5, #acb6e5);
-        }
-        .container {
-            text-align: center;
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            max-width: 500px;
-            width: 90%;
-        }
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s; }
-        
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-        
-        input[type="text"] {
-            padding: 12px;
-            width: 80%;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        button {
-            padding: 12px 24px;
-            font-size: 16px;
-            margin: 10px 5px;
-            border: none;
-            border-radius: 6px;
-            background-color: #ff6f61;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            width: 80%;
-        }
-        button:hover { background-color: #ff9a85; }
-        button:active { transform: scale(0.98); }
-        
-        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; justify-items: center; }
-        .category-grid button { width: 100%; margin: 0; }
-        
-        footer { margin-top: 25px; font-size: 14px; color: #777; }
-        .loader { color: #ff6f61; font-weight: bold; margin-bottom: 15px; }
-    </style>
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			margin: 0;
+			background: linear-gradient(135deg, #12c2e9, #c471ed, #f64f59);
+			background-size: 300% 300%;
+			animation: gradientFlow 15s ease infinite;
+			overflow-x: hidden;
+		}
+
+		@keyframes gradientFlow {
+			0% { background-position: 0% 50%; }
+			50% { background-position: 100% 50%; }
+			100% { background-position: 0% 50%; }
+		}
+
+		.container {
+			text-align: center;
+			background: var(--glass-bg);
+			backdrop-filter: blur(18px) saturate(180%);
+			-webkit-backdrop-filter: blur(18px) saturate(180%);
+			padding: 2.5rem;
+			border-radius: 30px;
+			border: 1px solid var(--glass-border);
+			box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+			max-width: 480px;
+			width: 90%;
+			color: var(--text-dark);
+		}
+
+		.logo-img {
+			width: 90px;
+			height: 90px;
+			margin-bottom: 1.5rem;
+			border-radius: 22%;
+			background: white;
+			padding: 5px;
+			box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+		}
+
+		.page { display: none; }
+		.page.active { display: block; animation: appleScale 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+		@keyframes appleScale {
+			from { opacity: 0; transform: scale(0.95); }
+			to { opacity: 1; transform: scale(1); }
+		}
+
+		h1 { font-weight: 700; letter-spacing: -0.5px; margin-bottom: 10px; }
+		.brief { font-size: 1.05rem; opacity: 0.8; margin-bottom: 2rem; line-height: 1.5; }
+
+		input {
+			padding: 16px;
+			width: 85%;
+			margin: 10px 0;
+			border: 1px solid rgba(0,0,0,0.1);
+			border-radius: 14px;
+			font-size: 1rem;
+			background: rgba(255, 255, 255, 0.5);
+			transition: 0.3s;
+		}
+		input:focus { background: white; outline: none; box-shadow: 0 0 0 4px rgba(18, 194, 233, 0.2); }
+
+		.btn-main {
+			background: var(--logo-red);
+			color: white;
+			border: none;
+			padding: 16px 32px;
+			border-radius: 14px;
+			font-weight: 600;
+			font-size: 1rem;
+			cursor: pointer;
+			width: 100%;
+			margin-top: 1.5rem;
+			transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+		.btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(246, 79, 89, 0.3); }
+
+		.category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 25px; }
+		.card {
+			background: rgba(255, 255, 255, 0.4);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			border-radius: 20px;
+			padding: 24px 12px;
+			cursor: pointer;
+			transition: 0.3s;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		.card:hover { 
+			background: rgba(255, 255, 255, 0.8); 
+			transform: translateY(-8px); 
+			box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+		}
+		.card svg { width: 40px; height: 40px; margin-bottom: 12px; }
+		.card strong { font-weight: 600; font-size: 0.95rem; }
+
+		.option-btn {
+			background: rgba(255, 255, 255, 0.5);
+			border: 1px solid rgba(0,0,0,0.05);
+			padding: 18px;
+			margin: 10px 0;
+			border-radius: 14px;
+			width: 100%;
+			cursor: pointer;
+			font-size: 1rem;
+			transition: 0.2s;
+			text-align: left;
+		}
+		.option-btn:hover { background: white; }
+
+		/* CERTIFICATE & LEGIT STAMP */
+		#certificate {
+			background: white;
+			border-radius: 20px;
+			padding: 30px;
+			margin: 20px 0;
+			color: #000;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			border: 1px solid #eee;
+			position: relative;
+			text-align: center;
+		}
+		
+		.legit-stamp {
+			position: absolute;
+			bottom: 25px;
+			right: 25px;
+			border: 4px solid #d63031;
+			color: #d63031;
+			padding: 4px 12px;
+			border-radius: 8px;
+			font-weight: 900;
+			font-size: 1.2rem;
+			text-transform: uppercase;
+			transform: rotate(-15deg);
+			opacity: 0.7;
+			font-family: 'Courier New', Courier, monospace;
+			pointer-events: none;
+		}
+
+		@media print {
+			body { background: white; }
+			.container { background: none; box-shadow: none; border: none; }
+			.btn-main, footer, .logo-img { display: none !important; }
+			#certificate { display: block !important; border: 2px solid #000; width: 100%; }
+		}
+
+		footer { margin-top: 2rem; font-size: 0.8rem; opacity: 0.6; }
+	</style>
 </head>
 <body>
-    <div class="container">
-        <div id="greeting-page" class="page active">
-            <h1>Welcome to W.F.S.M</h1>
-            <p>What Field Suits Me?</p>
-            <div id="loading-state" class="loader">Connecting to database...</div>
-            <div id="category-selection" style="display: none;">
-                <input type="text" id="user-name" placeholder="Enter your first name (Optional)">
-                <p>Select a field to test your aptitude:</p>
-                <div class="category-grid" id="category-buttons"></div>
-            </div>
-        </div>
 
-        <div id="question-page" class="page">
-            <p style="color: #ff6f61; font-weight: bold;" id="progress-text">Question 1</p>
-            <h2 id="question-text" style="margin-bottom: 25px;">Question will appear here</h2>
-            <div id="options-container" style="display: flex; flex-direction: column; align-items: center;"></div>
-        </div>
+	<div class="container">
+		<img src="https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png" alt="Logo" class="logo-img">
 
-        <div id="result-page" class="page">
-            <h2 id="result-title">Assessment Complete!</h2>
-            <h1 id="result-percentage" style="color: #ff6f61; font-size: 48px; margin: 10px 0;">0%</h1>
-            <p id="result-text" style="font-size: 18px; margin-bottom: 25px;"></p>
-            <button onclick="restart()">Take Another Test</button>
-        </div>
+		<div id="landing-page" class="page active">
+			<h1>W.F.S.M</h1>
+			<p class="brief">Congratulations on taking our professional assessment. Let's analyze your skills to find the perfect field for your future.</p>
+			<input type="text" id="user-name" placeholder="Full Name">
+			<input type="number" id="user-age" placeholder="Age">
+			<button class="btn-main" onclick="goToSelection()">Start My Assessment</button>
+		</div>
 
-        <footer>Brought to you by MindBO</footer>
-    </div>
+		<div id="selection-page" class="page">
+			<h3>Select a Field</h3>
+			<div class="category-grid" id="category-cards"></div>
+		</div>
 
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzhnZ8rxZgT7FvKJuuya5XBX9EtRCW6GBoktMWhhlpgy8MVyw543-CNYiicQSud7SIv/exec";
-        
-        let questions = {};
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let selectedInterest = '';
-        let userName = 'Anonymous';
+		<div id="quiz-page" class="page">
+			<h2 id="question-text" style="font-size: 1.2rem; margin-bottom: 20px;"></h2>
+			<div id="options-container"></div>
+		</div>
 
-        // Fetch questions on load
-        window.onload = async () => {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error("Network response was not ok");
-                questions = await response.json();
-                
-                document.getElementById('loading-state').style.display = 'none';
-                document.getElementById('category-selection').style.display = 'block';
-                
-                const btnContainer = document.getElementById('category-buttons');
-                Object.keys(questions).forEach(category => {
-                    const btn = document.createElement('button');
-                    btn.textContent = category;
-                    btn.onclick = () => selectInterest(category);
-                    btnContainer.appendChild(btn);
-                });
-            } catch (error) {
-                console.error("Fetch error:", error);
-                document.getElementById('loading-state').textContent = "Error connecting to Sheet. Check your App Script Deployment.";
-            }
-        };
+		<div id="result-page" class="page">
+			<div id="certificate">
+				<img src="https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png" style="width:50px; border-radius:10px; margin-bottom: 10px;">
+				<h2 style="margin: 5px 0; font-size: 1.2rem;">Official Certificate</h2>
+				<p style="margin: 5px 0;">Awarded to <strong><span id="cert-name"></span></strong></p>
+				<div style="font-size: 3.5rem; font-weight: 800; color: var(--logo-red); margin: 10px 0;" id="cert-percent">0%</div>
+				<p style="margin: 5px 0;">Compatibility with <strong><span id="cert-cat"></span></strong></p>
+				<p id="cert-verdict" style="font-size: 0.9rem; opacity: 0.8; margin-top: 10px;"></p>
+				
+				<div class="legit-stamp">LEGIT</div>
+			</div>
+			
+			<p style="font-size: 0.9rem; margin-bottom: 20px; font-weight: 500;">
+				"You have successfully analyzed your potential. We wish you the best in your career journey!"
+			</p>
+			
+			<button class="btn-main" onclick="window.print()">Print Result</button>
+			<button class="btn-main" style="background:rgba(0,0,0,0.05); color: #333;" onclick="location.reload()">Take Another Test</button>
+		</div>
 
-        function selectInterest(interest) {
-            const nameInput = document.getElementById('user-name').value.trim();
-            userName = nameInput ? nameInput : 'Anonymous';
-            selectedInterest = interest;
-            currentQuestionIndex = 0;
-            score = 0;
-            
-            showPage('question-page');
-            showQuestion();
-        }
+		<footer>Brought to you by MBOGL</footer>
+	</div>
 
-        function showQuestion() {
-            const categoryData = questions[selectedInterest];
-            if (!categoryData || !categoryData[currentQuestionIndex]) return;
+	<script>
+		const API_URL = "https://script.google.com/macros/s/AKfycbyQJOSSPY6_Vr25OiQkBW9ua8IHyS-HgBYXLgXh69Vr38RNYBWGncLzq1LGuPZmd1ntCA/exec";
+		
+		const icons = {
+			"Technology": `<svg viewBox="0 0 24 24" fill="none" stroke="#0575E6" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
+			"Business": `<svg viewBox="0 0 24 24" fill="none" stroke="#f64f59" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>`,
+			"Science": `<svg viewBox="0 0 24 24" fill="none" stroke="#12c2e9" stroke-width="1.5"><path d="M7 2v20M17 2v20M7 12h10M7 7h10M7 17h10"/></svg>`,
+			"Health": `<svg viewBox="0 0 24 24" fill="none" stroke="#ff4b2b" stroke-width="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
+			"Art": `<svg viewBox="0 0 24 24" fill="none" stroke="#c471ed" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10c0-1.5-1-2.5-2.5-2.5h-1.5c-1.5 0-2.5-1-2.5-2.5v-1.5C15.5 3 14.5 2 13 2Z"/><circle cx="7.5" cy="10.5" r=".5"/><circle cx="10.5" cy="7.5" r=".5"/><circle cx="13.5" cy="11.5" r=".5"/></svg>`
+		};
 
-            const currentQuestion = categoryData[currentQuestionIndex];
-            document.getElementById('progress-text').textContent = `Question ${currentQuestionIndex + 1} of ${categoryData.length}`;
-            document.getElementById('question-text').textContent = currentQuestion.text;
-            
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
-            
-            currentQuestion.options.forEach((option, index) => {
-                const optionButton = document.createElement('button');
-                optionButton.textContent = option;
-                optionButton.onclick = () => checkAnswer(index);
-                optionsContainer.appendChild(optionButton);
-            });
-        }
+		let questions = {};
+		let currentQuestionIndex = 0;
+		let score = 0;
+		let selectedInterest = '';
+		let userData = { name: '', age: '' };
 
-        function checkAnswer(selectedOption) {
-            const currentQuestion = questions[selectedInterest][currentQuestionIndex];
-            if (selectedOption === currentQuestion.answer) {
-                score += 5; 
-            }
-            
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions[selectedInterest].length) {
-                showQuestion();
-            } else {
-                showResult();
-            }
-        }
+		window.onload = async () => {
+			try {
+				const response = await fetch(API_URL);
+				questions = await response.json();
+				renderCards();
+			} catch (e) { console.error("Sync Error"); }
+		};
 
-        function showResult() {
-            showPage('result-page');
-            
-            const totalQuestions = questions[selectedInterest].length;
-            const maxScore = totalQuestions * 5;
-            const percentage = Math.round((score / maxScore) * 100);
-            
-            const verdict = percentage >= 60 
-                ? `Great job, ${userName}! This interest suits you perfectly.` 
-                : `Good effort, ${userName}, but you might find a better fit in another field.`;
-            
-            document.getElementById('result-percentage').textContent = `${percentage}%`;
-            document.getElementById('result-text').textContent = verdict;
+		function goToSelection() {
+			const n = document.getElementById('user-name').value;
+			const a = document.getElementById('user-age').value;
+			if(!n || !a) return alert("Please enter your name and age.");
+			userData = { name: n, age: a };
+			showPage('selection-page');
+		}
 
-            // Submit data to Google Sheet
-            const payload = {
-                name: userName,
-                category: selectedInterest,
-                score: score,
-                percentage: percentage,
-                verdict: verdict
-            };
+		function renderCards() {
+			const container = document.getElementById('category-cards');
+			Object.keys(questions).forEach(cat => {
+				const card = document.createElement('div');
+				card.className = 'card';
+				card.innerHTML = `${icons[cat] || ''} <strong>${cat}</strong>`;
+				card.onclick = () => startQuiz(cat);
+				container.appendChild(card);
+			});
+		}
 
-            fetch(API_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        }
+		function startQuiz(cat) {
+			selectedInterest = cat;
+			currentQuestionIndex = 0;
+			score = 0;
+			showPage('quiz-page');
+			showQuestion();
+		}
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-        }
+		function showQuestion() {
+			const q = questions[selectedInterest][currentQuestionIndex];
+			document.getElementById('question-text').textContent = q.text;
+			const box = document.getElementById('options-container');
+			box.innerHTML = '';
+			q.options.forEach((opt, idx) => {
+				const b = document.createElement('button');
+				b.className = 'option-btn';
+				b.textContent = opt;
+				b.onclick = () => {
+					if(idx === q.answer) score += 5;
+					currentQuestionIndex++;
+					if(currentQuestionIndex < questions[selectedInterest].length) showQuestion();
+					else finish();
+				};
+				box.appendChild(b);
+			});
+		}
 
-        function restart() {
-            showPage('greeting-page');
-        }
+		function finish() {
+			showPage('result-page');
+			const total = questions[selectedInterest].length * 5;
+			const p = Math.round((score / total) * 100);
+			const verdict = p >= 60 ? "The assessment confirms high compatibility with this field." : "This field may not suit your primary skills at this time.";
+			
+			document.getElementById('cert-name').textContent = userData.name;
+			document.getElementById('cert-cat').textContent = selectedInterest;
+			document.getElementById('cert-percent').textContent = p + "%";
+			document.getElementById('cert-verdict').textContent = verdict;
 
-        // Register Service Worker for PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
-                const blob = new Blob([swCode], {type: 'text/javascript'});
-                const url = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(url);
-            });
-        }
-    </script>
+			// Submit FULL data to Google Sheet
+			fetch(API_URL, {
+				method: 'POST',
+				mode: 'no-cors',
+				body: JSON.stringify({ 
+					name: userData.name, 
+					age: userData.age, 
+					category: selectedInterest, 
+					percentage: p,
+					verdict: verdict
+				})
+			});
+		}
+
+		function showPage(id) {
+			document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+			document.getElementById(id).classList.add('active');
+		}
+	</script>
 </body>
 </html>
