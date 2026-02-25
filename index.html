@@ -1,231 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="manifest" href='data:application/manifest+json,{
-  "name": "What Field Suits Me",
-  "short_name": "W.F.S.M",
-  "description": "Professional Field Aptitude Assessment Tool",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#74ebd5",
-  "theme_color": "#ff6f61",
-  "icons": [
-    {
-      "src": "https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
-}'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatFieldSuitsMe (W.F.S.M)</title>
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="W.F.S.M">
-<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png">
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>WhatFieldSuitsMe (W.F.S.M)</title>
-	<style>
-		body {
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			margin: 0;
-			background: linear-gradient(135deg, #74ebd5, #acb6e5);
-		}
-		.container {
-			text-align: center;
-			background-color: white;
-			padding: 30px;
-			border-radius: 12px;
-			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-			max-width: 500px;
-			width: 90%;
-		}
-		.page { display: none; }
-		.page.active { display: block; animation: fadeIn 0.4s; }
-		@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-		
-		input[type="text"] {
-			padding: 12px;
-			width: 80%;
-			margin-bottom: 20px;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			font-size: 16px;
-		}
-		button {
-			padding: 12px 24px;
-			font-size: 16px;
-			margin: 10px 5px;
-			border: none;
-			border-radius: 6px;
-			background-color: #ff6f61;
-			color: white;
-			cursor: pointer;
-			transition: background-color 0.3s ease, transform 0.1s ease;
-			width: 80%;
-		}
-		button:hover { background-color: #ff9a85; }
-		button:active { transform: scale(0.98); }
-		button:disabled { background-color: #ccc; cursor: not-allowed; }
-		
-		.category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; justify-items: center; }
-		.category-grid button { width: 100%; margin: 0; }
-		
-		footer { margin-top: 25px; font-size: 14px; color: #777; }
-		.loader { color: #ff6f61; font-weight: bold; margin-bottom: 15px; }
-	</style>
+    <link rel="manifest" href='data:application/manifest+json,{"name":"What Field Suits Me","short_name":"W.F.S.M","description":"Professional Field Aptitude Assessment Tool","start_url":".","display":"standalone","background_color":"#74ebd5","theme_color":"#ff6f61","icons":[{"src":"https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}'>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="W.F.S.M">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MindBreakOps/WFSM/main/wfsm.png">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+        }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s; }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        input[type="text"] {
+            padding: 12px;
+            width: 80%;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 6px;
+            background-color: #ff6f61;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 80%;
+        }
+        button:hover { background-color: #ff9a85; }
+        button:active { transform: scale(0.98); }
+        
+        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; justify-items: center; }
+        .category-grid button { width: 100%; margin: 0; }
+        
+        footer { margin-top: 25px; font-size: 14px; color: #777; }
+        .loader { color: #ff6f61; font-weight: bold; margin-bottom: 15px; }
+    </style>
 </head>
 <body>
-	<div class="container">
-		<div id="greeting-page" class="page active">
-			<h1>Welcome to W.F.S.M</h1>
-			<p>What Field Suits Me?</p>
-			
-			<div id="loading-state" class="loader">Connecting to database...</div>
-			
-			<div id="category-selection" style="display: none;">
-				<input type="text" id="user-name" placeholder="Enter your first name (Optional)">
-				<p>Select a field to test your aptitude:</p>
-				<div class="category-grid" id="category-buttons">
-					</div>
-			</div>
-		</div>
+    <div class="container">
+        <div id="greeting-page" class="page active">
+            <h1>Welcome to W.F.S.M</h1>
+            <p>What Field Suits Me?</p>
+            <div id="loading-state" class="loader">Connecting to database...</div>
+            <div id="category-selection" style="display: none;">
+                <input type="text" id="user-name" placeholder="Enter your first name (Optional)">
+                <p>Select a field to test your aptitude:</p>
+                <div class="category-grid" id="category-buttons"></div>
+            </div>
+        </div>
 
-		<div id="question-page" class="page hidden">
-			<p style="color: #ff6f61; font-weight: bold;" id="progress-text">Question 1</p>
-			<h2 id="question-text" style="margin-bottom: 25px;">Question will appear here</h2>
-			<div id="options-container" style="display: flex; flex-direction: column; align-items: center;"></div>
-		</div>
+        <div id="question-page" class="page">
+            <p style="color: #ff6f61; font-weight: bold;" id="progress-text">Question 1</p>
+            <h2 id="question-text" style="margin-bottom: 25px;">Question will appear here</h2>
+            <div id="options-container" style="display: flex; flex-direction: column; align-items: center;"></div>
+        </div>
 
-		<div id="result-page" class="page hidden">
-			<h2 id="result-title">Assessment Complete!</h2>
-			<h1 id="result-percentage" style="color: #ff6f61; font-size: 48px; margin: 10px 0;">0%</h1>
-			<p id="result-text" style="font-size: 18px; margin-bottom: 25px;"></p>
-			<button onclick="restart()">Take Another Test</button>
-		</div>
+        <div id="result-page" class="page">
+            <h2 id="result-title">Assessment Complete!</h2>
+            <h1 id="result-percentage" style="color: #ff6f61; font-size: 48px; margin: 10px 0;">0%</h1>
+            <p id="result-text" style="font-size: 18px; margin-bottom: 25px;"></p>
+            <button onclick="restart()">Take Another Test</button>
+        </div>
 
-		<footer>Brought to you by Asim</footer>
-	</div>
+        <footer>Brought to you by MindBO</footer>
+    </div>
 
-	<script>
-		// --- PUT YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ---
-		const API_URL = "https://script.google.com/macros/s/AKfycbzhnZ8rxZgT7FvKJuuya5XBX9EtRCW6GBoktMWhhlpgy8MVyw543-CNYiicQSud7SIv/exec";
-		
-		let questions = {};
-		let currentQuestionIndex = 0;
-		let score = 0;
-		let selectedInterest = '';
-		let userName = 'Anonymous';
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbzhnZ8rxZgT7FvKJuuya5XBX9EtRCW6GBoktMWhhlpgy8MVyw543-CNYiicQSud7SIv/exec";
+        
+        let questions = {};
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedInterest = '';
+        let userName = 'Anonymous';
 
-		// 1. Fetch questions on load
-		window.onload = async () => {
-			try {
-				const response = await fetch(API_URL);
-				questions = await response.json();
-				
-				// Hide loader, show categories
-				document.getElementById('loading-state').style.display = 'none';
-				document.getElementById('category-selection').style.display = 'block';
-				
-				// Create buttons dynamically based on sheet data
-				const btnContainer = document.getElementById('category-buttons');
-				Object.keys(questions).forEach(category => {
-					const btn = document.createElement('button');
-					btn.textContent = category;
-					btn.onclick = () => selectInterest(category);
-					btnContainer.appendChild(btn);
-				});
-			} catch (error) {
-				document.getElementById('loading-state').textContent = "Error loading test data. Please try again later.";
-			}
-		};
+        // Fetch questions on load
+        window.onload = async () => {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error("Network response was not ok");
+                questions = await response.json();
+                
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('category-selection').style.display = 'block';
+                
+                const btnContainer = document.getElementById('category-buttons');
+                Object.keys(questions).forEach(category => {
+                    const btn = document.createElement('button');
+                    btn.textContent = category;
+                    btn.onclick = () => selectInterest(category);
+                    btnContainer.appendChild(btn);
+                });
+            } catch (error) {
+                console.error("Fetch error:", error);
+                document.getElementById('loading-state').textContent = "Error connecting to Sheet. Check your App Script Deployment.";
+            }
+        };
 
-		function selectInterest(interest) {
-			const nameInput = document.getElementById('user-name').value.trim();
-			if (nameInput) userName = nameInput;
-			
-			selectedInterest = interest;
-			currentQuestionIndex = 0;
-			score = 0;
-			
-			document.getElementById('greeting-page').classList.remove('active');
-			document.getElementById('question-page').classList.add('active');
-			showQuestion();
-		}
+        function selectInterest(interest) {
+            const nameInput = document.getElementById('user-name').value.trim();
+            userName = nameInput ? nameInput : 'Anonymous';
+            selectedInterest = interest;
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            showPage('question-page');
+            showQuestion();
+        }
 
-		function showQuestion() {
-			const currentQuestion = questions[selectedInterest][currentQuestionIndex];
-			const totalQ = questions[selectedInterest].length;
-			
-			document.getElementById('progress-text').textContent = `Question ${currentQuestionIndex + 1} of ${totalQ}`;
-			document.getElementById('question-text').textContent = currentQuestion.text;
-			
-			const optionsContainer = document.getElementById('options-container');
-			optionsContainer.innerHTML = '';
-			
-			currentQuestion.options.forEach((option, index) => {
-				const optionButton = document.createElement('button');
-				optionButton.textContent = option;
-				optionButton.onclick = () => checkAnswer(index);
-				optionsContainer.appendChild(optionButton);
-			});
-		}
+        function showQuestion() {
+            const categoryData = questions[selectedInterest];
+            if (!categoryData || !categoryData[currentQuestionIndex]) return;
 
-		function checkAnswer(selectedOption) {
-			const currentQuestion = questions[selectedInterest][currentQuestionIndex];
-			if (selectedOption === currentQuestion.answer) {
-				score += 5; 
-			}
-			
-			currentQuestionIndex++;
-			if (currentQuestionIndex < questions[selectedInterest].length) {
-				showQuestion();
-			} else {
-				showResult();
-			}
-		}
+            const currentQuestion = categoryData[currentQuestionIndex];
+            document.getElementById('progress-text').textContent = `Question ${currentQuestionIndex + 1} of ${categoryData.length}`;
+            document.getElementById('question-text').textContent = currentQuestion.text;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            currentQuestion.options.forEach((option, index) => {
+                const optionButton = document.createElement('button');
+                optionButton.textContent = option;
+                optionButton.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(optionButton);
+            });
+        }
 
-		function showResult() {
-			document.getElementById('question-page').classList.remove('active');
-			document.getElementById('result-page').classList.add('active');
-			
-			const totalQuestions = questions[selectedInterest].length;
-			const maxScore = totalQuestions * 5;
-			const percentage = Math.round((score / maxScore) * 100);
-			
-			const verdict = percentage >= 60 
-				? `Great job, ${userName}! This interest suits you perfectly.` 
-				: `Good effort, ${userName}, but you might find a better fit in another field.`;
-			
-			document.getElementById('result-percentage').textContent = `${percentage}%`;
-			document.getElementById('result-text').textContent = verdict;
+        function checkAnswer(selectedOption) {
+            const currentQuestion = questions[selectedInterest][currentQuestionIndex];
+            if (selectedOption === currentQuestion.answer) {
+                score += 5; 
+            }
+            
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions[selectedInterest].length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
 
-			// 2. Post results back to Google Sheet
-			const payload = {
-				name: userName,
-				category: selectedInterest,
-				score: score,
-				percentage: percentage,
-				verdict: verdict
-			};
+        function showResult() {
+            showPage('result-page');
+            
+            const totalQuestions = questions[selectedInterest].length;
+            const maxScore = totalQuestions * 5;
+            const percentage = Math.round((score / maxScore) * 100);
+            
+            const verdict = percentage >= 60 
+                ? `Great job, ${userName}! This interest suits you perfectly.` 
+                : `Good effort, ${userName}, but you might find a better fit in another field.`;
+            
+            document.getElementById('result-percentage').textContent = `${percentage}%`;
+            document.getElementById('result-text').textContent = verdict;
 
-			fetch(API_URL, {
-				method: 'POST',
-				mode: 'no-cors', // Required for sending POST to GAS without preflight errors
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload)
-			});
-		}
+            // Submit data to Google Sheet
+            const payload = {
+                name: userName,
+                category: selectedInterest,
+                score: score,
+                percentage: percentage,
+                verdict: verdict
+            };
 
-		function restart() {
-			document.getElementById('result-page').classList.remove('active');
-			document.getElementById('greeting-page').classList.add('active');
-		}
-	</script>
+            fetch(API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function restart() {
+            showPage('greeting-page');
+        }
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
+                const blob = new Blob([swCode], {type: 'text/javascript'});
+                const url = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(url);
+            });
+        }
+    </script>
 </body>
 </html>
