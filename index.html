@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 	
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -27,6 +27,10 @@
 			animation: gradientFlow 15s ease infinite;
 			color: var(--text);
 			transition: direction 0.3s ease;
+			
+			/* NOTCH SUPPORT: Adds padding so content stays in the "Safe Area" */
+			padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+			box-sizing: border-box;
 		}
 
 		/* RTL Support */
@@ -40,14 +44,19 @@
 			padding: 2.5rem; border-radius: 35px; border: 1px solid rgba(255,255,255,0.3);
 			max-width: 450px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.15);
 			position: relative;
+			/* Ensure container doesn't touch the very edge on mobile */
+			margin: 20px 0;
 		}
 
-		/* Language Switcher Button */
+		/* Adjusted Language Button to avoid system icons in corners */
 		.lang-switch {
-			position: absolute; top: 15px; right: 15px;
+			position: absolute; 
+			top: 10px; 
+			right: 15px;
 			background: rgba(255,255,255,0.6); border: none;
 			padding: 8px 12px; border-radius: 12px; cursor: pointer;
 			font-weight: bold; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.3);
+			z-index: 100;
 		}
 		.rtl .lang-switch { right: auto; left: 15px; }
 		
@@ -80,7 +89,7 @@
 		.rtl .legit-stamp { right: auto; left: 20px; transform: rotate(15deg); }
 
 		@media print {
-			body { background: white; }
+			body { background: white; padding: 0; }
 			.container { background: none; border: none; box-shadow: none; }
 			.btn-main, footer, .logo-img, h1, .brief, .lang-switch { display: none !important; }
 			#certificate { display: block !important; border: 2px solid #000; }
@@ -129,8 +138,8 @@
 			<button class="btn-main" onclick="window.print()" id="t-print">Print Result</button>
 			<button class="btn-main" style="background:rgba(0,0,0,0.05); color: #333;" onclick="location.reload()" id="t-restart">Take Another Test</button>
 		</div>
-
-		<footer id="t-footer">Brought to you by MBOGL</footer>
+        
+		<br <footer id="t-footer"><b> Brought to you by MBOGL</b></footer>
 	</div>
 
 	<script>
@@ -162,14 +171,7 @@
 				langBtn: "العربية",
 				vHigh: "Strong Compatibility Found.",
 				vLow: "Alternative Paths Suggested.",
-				// MAPPING: Arabic Category -> English Key (for icons)
-				cats: { 
-					"Technology": "Technology", 
-					"Business": "Business", 
-					"Science": "Science", 
-					"Health": "Health", 
-					"Art": "Art" 
-				}
+				cats: { "Technology": "Technology", "Business": "Business", "Science": "Science", "Health": "Health", "Art": "Art" }
 			},
 			ar: {
 				title: "W.F.S.M",
@@ -189,14 +191,7 @@
 				langBtn: "English",
 				vHigh: "تم العثور على توافق قوي.",
 				vLow: "يُقترح استكشاف مسارات بديلة.",
-				// MAPPING: Arabic Category -> English Key (for icons)
-				cats: { 
-					"التكنولوجيا": "Technology", 
-					"المال والأعمال": "Business", 
-					"العلوم": "Science", 
-					"الصحة": "Health", 
-					"الفنون": "Art" 
-				}
+				cats: { "التكنولوجيا": "Technology", "المال والأعمال": "Business", "العلوم": "Science", "الصحة": "Health", "الفنون": "Art" }
 			}
 		};
 
@@ -223,7 +218,7 @@
 			document.getElementById('t-print').textContent = t.print;
 			document.getElementById('t-restart').textContent = t.restart;
 			document.getElementById('t-footer').textContent = t.footer;
-			renderCards(); // Refresh category names
+			renderCards();
 		}
 
 		const icons = {
@@ -234,15 +229,15 @@
 			"Art": `<svg viewBox="0 0 24 24" fill="none" stroke="#c471ed" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10c0-1.5-1-2.5-2.5-2.5h-1.5c-1.5 0-2.5-1-2.5-2.5v-1.5C15.5 3 14.5 2 13 2Z"/><circle cx="7.5" cy="10.5" r=".5"/><circle cx="10.5" cy="7.5" r=".5"/><circle cx="13.5" cy="11.5" r=".5"/></svg>`
 		};
 
-	let allQuestions = { en: {}, ar: {} }; // Store both languages
-	
-	window.onload = async () => {
-		try {
-			const response = await fetch(API_URL);
-			allQuestions = await response.json();
-			updateUI(); // This will trigger renderCards()
-		} catch (e) { console.error("Data load error"); }
-	};
+		let allQuestions = { en: {}, ar: {} };
+		
+		window.onload = async () => {
+			try {
+				const response = await fetch(API_URL);
+				allQuestions = await response.json();
+				updateUI();
+			} catch (e) { console.error("Data load error"); }
+		};
 
 		function goToSelection() {
 			const n = document.getElementById('user-name').value;
@@ -255,18 +250,14 @@
 		function renderCards() {
 			const container = document.getElementById('category-cards');
 			if(!container) return;
-			container.innerHTML = ''; 
-			
-			// Get questions for the active language
+			container.innerHTML = '';
 			const currentQuestions = allQuestions[currentLang];
+			if(!currentQuestions) return;
 			
 			Object.keys(currentQuestions).forEach(catName => {
 				const card = document.createElement('div');
 				card.className = 'card';
-				
-				// Look up the English key to find the correct SVG icon
 				const iconKey = translations[currentLang].cats[catName] || "Art";
-				
 				card.innerHTML = `${icons[iconKey] || '⭐'} <br> <strong>${catName}</strong>`;
 				card.onclick = () => startQuiz(catName);
 				container.appendChild(card);
@@ -274,23 +265,19 @@
 		}
 		
 		function startQuiz(catName) {
-			selectedInterest = catName; 
-			currentQuestionIndex = 0; 
-			score = 0;
-			// Pick questions from the correct language set
-			questions = allQuestions[currentLang][selectedInterest]; 
-			showPage('quiz-page'); 
-			showQuestion();
+			selectedInterest = catName; currentQuestionIndex = 0; score = 0;
+			questions = allQuestions[currentLang][selectedInterest];
+			showPage('quiz-page'); showQuestion();
 		}
 		
 		function showQuestion() {
-			const q = questions[currentQuestionIndex]; // 'questions' is now the filtered list
+			const q = questions[currentQuestionIndex];
 			document.getElementById('question-text').textContent = q.text;
 			const box = document.getElementById('options-container');
 			box.innerHTML = '';
 			q.options.forEach((opt, idx) => {
 				const b = document.createElement('button');
-				b.className = 'btn-main'; b.style.background = "rgba(255,255,255,0.8)"; 
+				b.className = 'btn-main'; b.style.background = "rgba(255,255,255,0.8)";
 				b.style.color = "#333"; b.textContent = opt;
 				b.onclick = () => {
 					if(idx === q.answer) score += 5;
@@ -304,32 +291,19 @@
 
 		function finish() {
 			showPage('result-page');
-			
-			// FIXED: 'questions' is already the array of questions for the selection
 			const totalQuestions = questions.length;
-			const totalPossibleScore = totalQuestions * 5;
-			const p = Math.round((score / totalPossibleScore) * 100);
-			
+			const p = Math.round((score / (totalQuestions * 5)) * 100);
 			const verdict = p >= 60 ? translations[currentLang].vHigh : translations[currentLang].vLow;
-		
+
 			document.getElementById('cert-name').textContent = userData.name;
 			document.getElementById('cert-percent').textContent = p + "%";
-			
-			// Display the translated category name on the certificate
-			const displayCat = translations[currentLang].cats[selectedInterest] || selectedInterest;
-			document.getElementById('cert-cat').textContent = displayCat;
+			document.getElementById('cert-cat').textContent = selectedInterest;
 			document.getElementById('cert-verdict').textContent = verdict;
-		
-			const finalUrl = API_URL + 
-				"?name=" + encodeURIComponent(userData.name) +
-				"&age=" + encodeURIComponent(userData.age) +
-				"&category=" + encodeURIComponent(selectedInterest) +
-				"&percentage=" + encodeURIComponent(p) +
-				"&verdict=" + encodeURIComponent(verdict) +
-				"&lang=" + currentLang;
-		
+
+			const finalUrl = API_URL + "?name=" + encodeURIComponent(userData.name) + "&age=" + encodeURIComponent(userData.age) + "&category=" + encodeURIComponent(selectedInterest) + "&percentage=" + encodeURIComponent(p) + "&verdict=" + encodeURIComponent(verdict) + "&lang=" + currentLang;
 			fetch(finalUrl, { mode: 'no-cors' });
 		}
+
 		function showPage(id) {
 			document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 			document.getElementById(id).classList.add('active');
