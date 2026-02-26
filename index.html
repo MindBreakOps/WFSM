@@ -220,9 +220,15 @@
 	</div>
 
 	<script>
-		// 1. YOUR API URL
-		const API_URL = "https://script.google.com/macros/s/AKfycbykqcyO772Vt8vSykrTR4o8_66p_oHuBEvqXC_Q2itNYMO46EROPVgpRUameC4GolWwIg/exec";
-		
+		// PASTE YOUR NEW DEPLOYMENT URL HERE
+		const API_URL = "https://script.google.com/macros/s/AKfycbx4TR9fhv8y-xIHEOoTMTiAExmSXZywmt_4mr50x6vhAeDEHQYNVZPrP6U4YH2EtHGeGQ/exec";
+
+		let questions = {};
+		let currentQuestionIndex = 0;
+		let score = 0;
+		let selectedInterest = '';
+		let userData = { name: '', age: '' };
+
 		const icons = {
 			"Technology": `<svg viewBox="0 0 24 24" fill="none" stroke="#0575E6" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>`,
 			"Business": `<svg viewBox="0 0 24 24" fill="none" stroke="#f64f59" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>`,
@@ -230,51 +236,44 @@
 			"Health": `<svg viewBox="0 0 24 24" fill="none" stroke="#ff4b2b" stroke-width="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`,
 			"Art": `<svg viewBox="0 0 24 24" fill="none" stroke="#c471ed" stroke-width="1.5"><path d="M12 2a10 10 0 1 0 10 10c0-1.5-1-2.5-2.5-2.5h-1.5c-1.5 0-2.5-1-2.5-2.5v-1.5C15.5 3 14.5 2 13 2Z"/><circle cx="7.5" cy="10.5" r=".5"/><circle cx="10.5" cy="7.5" r=".5"/><circle cx="13.5" cy="11.5" r=".5"/></svg>`
 		};
-	
-		let questions = {};
-		let currentQuestionIndex = 0;
-		let score = 0;
-		let selectedInterest = '';
-		let userData = { name: '', age: '' };
-	
-		// Load questions from Sheet
+
 		window.onload = async () => {
 			try {
 				const response = await fetch(API_URL);
 				questions = await response.json();
 				renderCards();
-			} catch (e) { console.error("Sync Error:", e); }
+			} catch (e) { 
+				console.error("API Error");
+				questions = {"Technology": [{"text":"Is the sheet connected?","options":["Yes","No","Maybe"],"answer":0}]};
+				renderCards();
+			}
 		};
-	
-		// Button function - now fixed
+
 		function goToSelection() {
 			const n = document.getElementById('user-name').value;
 			const a = document.getElementById('user-age').value;
-			if(!n || !a) return alert("Please enter your name and age.");
+			if(!n || !a) { alert("Please enter both Name and Age."); return; }
 			userData = { name: n, age: a };
 			showPage('selection-page');
 		}
-	
+
 		function renderCards() {
 			const container = document.getElementById('category-cards');
 			container.innerHTML = ''; 
 			Object.keys(questions).forEach(cat => {
 				const card = document.createElement('div');
 				card.className = 'card';
-				card.innerHTML = `${icons[cat] || ''} <strong>${cat}</strong>`;
+				card.innerHTML = `${icons[cat] || '⭐'} <br> <strong>${cat}</strong>`;
 				card.onclick = () => startQuiz(cat);
 				container.appendChild(card);
 			});
 		}
-	
-		function startQuiz(cat) {
-			selectedInterest = cat;
-			currentQuestionIndex = 0;
-			score = 0;
-			showPage('quiz-page');
-			showQuestion();
+
+		function startQuiz(catName) {
+			selectedInterest = catName; currentQuestionIndex = 0; score = 0;
+			showPage('quiz-page'); showQuestion();
 		}
-	
+
 		function showQuestion() {
 			const q = questions[selectedInterest][currentQuestionIndex];
 			document.getElementById('question-text').textContent = q.text;
@@ -282,7 +281,8 @@
 			box.innerHTML = '';
 			q.options.forEach((opt, idx) => {
 				const b = document.createElement('button');
-				b.className = 'option-btn';
+				b.className = 'btn-main'; b.style.background = "rgba(255,255,255,0.8)"; b.style.color = "#333";
+				b.style.boxShadow = "none"; b.style.border = "1px solid rgba(0,0,0,0.05)";
 				b.textContent = opt;
 				b.onclick = () => {
 					if(idx === q.answer) score += 5;
@@ -293,35 +293,33 @@
 				box.appendChild(b);
 			});
 		}
-	
+
 		function finish() {
 			showPage('result-page');
 			const total = questions[selectedInterest].length * 5;
 			const p = Math.round((score / total) * 100);
-			const verdict = p >= 60 ? "High Compatibility Found." : "Alternative Paths Suggested.";
-			
+			const verdict = p >= 60 ? "Strong Compatibility Found." : "Alternative Paths Suggested.";
+
 			document.getElementById('cert-name').textContent = userData.name;
-			document.getElementById('cert-cat').textContent = selectedInterest;
 			document.getElementById('cert-percent').textContent = p + "%";
+			document.getElementById('cert-cat').textContent = "Field: " + selectedInterest;
 			document.getElementById('cert-verdict').textContent = verdict;
-	
-			// UPLOAD TO GOOGLE RESULTS TAB
+
+			// UNIFIED GET UPLOAD: The most reliable way to bypass CORS and security blocks
 			const finalUrl = API_URL + 
 				"?name=" + encodeURIComponent(userData.name) +
 				"&age=" + encodeURIComponent(userData.age) +
 				"&category=" + encodeURIComponent(selectedInterest) +
 				"&percentage=" + encodeURIComponent(p) +
 				"&verdict=" + encodeURIComponent(verdict);
-	
-			// This sends the data even if CORS blocks the response
-			const img = new Image();
-			img.src = finalUrl;
+
+			// We use 'no-cors' so the browser doesn't block the request
+			fetch(finalUrl, { mode: 'no-cors' });
 		}
-	
+
 		function showPage(id) {
 			document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-			const target = document.getElementById(id);
-			if(target) target.classList.add('active');
+			document.getElementById(id).classList.add('active');
 		}
 	</script>
 </body>
